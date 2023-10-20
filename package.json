@@ -1,13 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "build": "nuxt build",
+    "build": "NUXT_APP_BASE_URL='/wizard-scores' && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.0.2",
+    "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^5.0.3",
     "nuxt": "3.0.0-rc.1"
   }

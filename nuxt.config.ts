@@ -7,6 +7,7 @@ export default defineNuxtConfig({
         shim: false
     },
     modules: [
+        '@nuxtjs/pwa',
         '@nuxtjs/tailwindcss',
         // '@nuxtjs/color-mode'
     ],
