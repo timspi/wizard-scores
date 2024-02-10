@@ -5,6 +5,9 @@
 </template>
 
 <script setup>
+import { StatusBar } from '@capacitor/status-bar';
+StatusBar.setBackgroundColor({ color: '#1e293b' });
+
 useHead({
   title: 'Wizard Scorekeeper',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',

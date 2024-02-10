@@ -1,0 +1,8 @@
+{
+  "appId": "de.timsp.wizardscores",
+  "appName": "Wizard Scores",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

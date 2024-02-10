@@ -7,9 +7,15 @@
     "preview": "nuxt preview"
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.7.0",
     "@nuxtjs/color-mode": "^3.0.2",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^5.0.3",
     "nuxt": "3.0.0-rc.1"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/status-bar": "^5.0.7"
   }
 }
