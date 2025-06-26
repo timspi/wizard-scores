@@ -76,6 +76,9 @@
                             </td>
                             <td class="py-1 px-2 border border-slate-700">
                                 {{ p.score }}
+                                <span v-if="p.diff !== undefined" class="float-right text-slate-700">
+                                    {{ p.diff }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -83,10 +86,13 @@
             </div>
 
             <button @click="nextRound()" class="block mx-auto my-2 font-bold py-2 px-4 rounded bg-slate-500">
-                Next round
+                {{ roundIndex >= 0 ? "Next round" : "Start" }}
             </button>
-
-            <h2 class="mt-10 text-lg text-center">Scoresheet</h2>
+            <p v-if="roundIndex >= 0" class="font-light text-center">
+                ({{ getPlayer() }} has to give {{ roundIndex + 2 }} cards)
+            </p>
+            
+            <h2 class="mt-7 text-lg text-center">Scoresheet</h2>
 
             <div class="overflow-x-auto py-4">
                 <table class="table-auto w-full">
@@ -202,6 +208,8 @@ const getRanking = () => {
         } else {
             scores[ind].rank = ind + 1; // rank based on spot in ranking
         }
+        // calculate difference to previous player
+        scores[ind].diff = scores[ind].score - scores[ind - 1].score;
     }
     return scores;
 }
