@@ -1,3 +1,8 @@
+export interface Settings {
+    validateBidsNotWins?: boolean;
+    rotateStartingPlayer?: boolean;
+}
+
 export interface Round {
     roundNumber: number;
     players: {

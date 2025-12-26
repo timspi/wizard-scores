@@ -9,7 +9,7 @@
                     1 ? 'card' : 'cards' }}, {{ getPlayer() }} starts with bidding.
             </p>
 
-            <PlayerInputs :round="currentRound" type="bids" />
+            <PlayerInputs :round="currentRound as Round" type="bids" />
 
             <div class="flex justify-center gap-3">
                 <div>
@@ -35,7 +35,7 @@
                 {{ getPlayer() }} starts this round.
             </p>
 
-            <PlayerInputs :round="currentRound" type="wins" />
+            <PlayerInputs :round="currentRound as Round" type="wins" />
 
             <div class="flex justify-center gap-3">
                 <button @click="view = 'bids'" class="font-bold py-2 px-4 rounded bg-slate-500 disabled:bg-slate-300">
@@ -112,7 +112,7 @@
                                 {{ r.roundNumber }}
                             </td>
                             <td v-for="p in players" :key="p.id" class="py-1 px-2 border border-slate-700">
-                                {{ r.players[p.id].score }}
+                                {{ r.players[p.id]?.score || 0 }}
                             </td>
                         </tr>
                     </tbody>
@@ -139,6 +139,7 @@ const roundIndex = ref(-1);
 const currentRound = ref<Partial<Round>>({});
 const players = usePlayers();
 const rounds = useRounds();
+const settings = useSettings();
 
 onBeforeMount(() => {
     if (rounds.value.length > 0) {
@@ -168,10 +169,10 @@ const saveRound = () => {
     rounds.value[roundIndex.value] = currentRound.value as Round;
     currentRound.value = {};
 
-    const playerData = rounds.value[roundIndex.value].players;
+    const playerData = rounds.value[roundIndex.value]!.players;
     for (let p of players.value) {
-        const diff = Math.abs(playerData[p.id].bids - playerData[p.id].wins);
-        playerData[p.id].score = diff == 0 ? 20 + playerData[p.id].bids * 10 : diff * -10;
+        const diff = Math.abs((playerData[p.id]?.bids || 0) - (playerData[p.id]?.wins || 0));
+        playerData[p.id]!.score = diff == 0 ? 20 + (playerData[p.id]?.bids || 0) * 10 : diff * -10;
     }
     localStorage.setItem('rounds', JSON.stringify(rounds.value));
     view.value = 'scores';
@@ -184,31 +185,32 @@ const cancelRound = () => {
 
 const getPlayer = (prev = false) => {
     const offset = prev ? players.value.length - 1 : 0;
-    return players.value[(roundIndex.value + offset) % players.value.length].name;
+    return players.value[(roundIndex.value + offset) % players.value.length]?.name || '';
 };
 
 const getPlayerScore = (player: Player) => {
-    return rounds.value.reduce((val, r) => r.players[player.id].score + val, 0);
+    return rounds.value.reduce((val, r) => (r.players[player.id]?.score || 0) + val, 0);
 };
 
 const getRanking = () => {
     const scores = players.value.map(p => ({
         rank: 0,
         name: p.name,
-        score: getPlayerScore(p)
+        score: getPlayerScore(p),
+        diff: 0,
     }));
     scores.sort((p1, p2) => p2.score - p1.score);
 
     // Generate ranking based on scores (players with same score get same rank)
-    scores[0].rank = 1; // first is always first
+    scores[0]!.rank = 1; // first is always first
     for (let ind = 1; ind < scores.length; ind++) {
-        if (scores[ind - 1].score === scores[ind].score) {
-            scores[ind].rank = scores[ind - 1].rank; // same rank as successor
+        if (scores[ind - 1]!.score === scores[ind]!.score) {
+            scores[ind]!.rank = scores[ind - 1]!.rank; // same rank as successor
         } else {
-            scores[ind].rank = ind + 1; // rank based on spot in ranking
+            scores[ind]!.rank = ind + 1; // rank based on spot in ranking
         }
         // calculate difference to previous player
-        scores[ind].diff = scores[ind].score - scores[ind - 1].score;
+        scores[ind]!.diff = scores[ind]!.score - scores[ind - 1]!.score;
     }
     return scores;
 }
@@ -217,9 +219,9 @@ const isDisabled = () => {
     const round = currentRound.value;
     if (!round.players) return true;
 
-    const sum = Object.values(round.players).reduce((val, p) => p[view.value] + val, 0);
+    const sum = Object.values(round.players).reduce((val, p) => (p[view.value as 'bids' | 'wins'] || 0) + val, 0);
 
-    if (view.value == 'bids' && sum == round.roundNumber) return true;
+    if (view.value == 'bids' && settings.value.validateBidsNotWins && sum == round.roundNumber) return true;
     if (view.value == 'wins' && sum != round.roundNumber) return true;
 
     return false;
