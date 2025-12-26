@@ -132,8 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePlayers, useRounds } from '~~/composables/states';
-import { Player, Round } from '~~/models';
+import type { Player, Round } from '~/models';
 
 const view = ref('scores');
 const roundIndex = ref(-1);

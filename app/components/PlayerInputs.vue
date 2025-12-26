@@ -16,8 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePlayers } from '~~/composables/states';
-import { Player, Round } from '~~/models';
+import type { Player, Round } from '~~/app/models';
 
 const players = usePlayers();
 

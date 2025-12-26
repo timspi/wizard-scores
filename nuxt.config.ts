@@ -1,19 +1,14 @@
-import { defineNuxtConfig } from 'nuxt'
+import tailwindcss from "@tailwindcss/vite";
 
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-    ssr: false,
-    typescript: {
-        shim: false
-    },
-    modules: [
-        '@nuxtjs/pwa',
-        '@nuxtjs/tailwindcss',
-        // '@nuxtjs/color-mode'
-    ],
-    // colorMode: {
-    //     preference: 'system', // default value of $colorMode.preference
-    //     fallback: 'dark', // fallback value if not system preference found
-    //     classSuffix: ''
-    // },
+  compatibilityDate: '2025-12-26',
+  ssr: false,
+  devtools: { enabled: true },
+  css: ['./app/main.css'],
+  vite: {
+      plugins: [
+          tailwindcss(),
+      ],
+  },
+  modules: ['@vite-pwa/nuxt'],
 })

@@ -4,7 +4,7 @@
             <h2 class="text-lg text-center">Add players</h2>
 
             <textarea class="block w-full border-2 border-slate-500 rounded p-2 my-4 text-base outline-none focus:border-slate-400 bg-slate-800" rows="8" v-model="playerStr" placeholder="Add one player per line"></textarea>
-            <button @click="start()" class="block mx-auto font-bold py-2 px-4 rounded bg-slate-500">Start</button>
+            <button @click="start()" class="block mx-auto font-bold py-2 px-4 mt-4 rounded bg-slate-500">Start</button>
         </div>
 
         <!-- <div v-else>
@@ -16,8 +16,6 @@
 </template>
 
 <script setup>
-import { usePlayers } from '~~/composables/states';
-
 // const isSetup = ref(true);
 const players = usePlayers();
 const rounds = useRounds();
