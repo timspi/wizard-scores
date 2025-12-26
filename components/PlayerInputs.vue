@@ -2,10 +2,10 @@
     <div class="py-4">
         <div v-for="p in players" :key="p.id" class="flex items-center py-2 -mx-4 px-4 odd:bg-slate-800">
             <span class="flex-1">{{ p.name }}</span>
-            <button @click="add(p, -1)" class="w-8 h-8 bg-slate-600 rounded-full text-xl font-black">-</button>
+            <button @click="add(p, -1)" :disabled="round.players[p.id][props.type] <= 0" class="w-8 h-8 bg-slate-600 rounded-full text-xl font-black disabled:bg-slate-700">-</button>
             <span class="w-12 text-center">{{ round.players[p.id][props.type] + (props.type === 'wins' ? ' / ' +
                 round.players[p.id]['bids'] : '') }}</span>
-            <button @click="add(p, 1)" class="w-8 h-8 bg-slate-600 rounded-full text-xl font-black">+</button>
+            <button @click="add(p, 1)" :disabled="round.players[p.id][props.type] >= props.round.roundNumber" class="w-8 h-8 bg-slate-600 rounded-full text-xl font-black disabled:bg-slate-700">+</button>
         </div>
 
         <div class="flex py-2">
@@ -27,7 +27,10 @@ const props = defineProps<{
 }>();
 
 const add = (p: Player, inc: number) => {
-    props.round.players[p.id][props.type] += inc;
+    let next = props.round.players[p.id][props.type] + inc;
+    if (next >= 0 && next <= props.round.roundNumber) {
+        props.round.players[p.id][props.type] = next;
+    }
 };
 
 const getSum = () => {
