@@ -85,12 +85,27 @@
                 </table>
             </div>
 
-            <button @click="nextRound()" class="block mx-auto my-2 font-bold py-2 px-4 rounded bg-slate-500">
-                {{ roundIndex >= 0 ? "Next round" : "Start" }}
-            </button>
-            <p v-if="roundIndex >= 0" class="font-light text-center">
-                ({{ getPlayer() }} has to give {{ roundIndex + 2 }} cards)
-            </p>
+            <template v-if="isOfficialEnd">
+                <p class="font-light text-center">
+                    The official game ends now. If you are playing with multiple decks or other cards, feel free to continue anyways.
+                </p>
+                <div class="flex justify-center gap-3 mt-3">
+                    <button @click="nextRound()" class="font-bold py-2 px-4 rounded bg-slate-500 disabled:bg-slate-300">
+                        Continue
+                    </button>
+                    <button @click="newGame()" class="font-bold py-2 px-4 rounded bg-slate-500 disabled:bg-slate-300">
+                        Start new game
+                    </button>
+                </div>
+            </template>
+            <template v-else>
+                <button @click="nextRound()" class="block mx-auto my-2 font-bold py-2 px-4 rounded bg-slate-500">
+                    {{ roundIndex >= 0 ? "Next round" : "Start" }}
+                </button>
+                <p v-if="roundIndex >= 0" class="font-light text-center">
+                    ({{ getPlayer() }} has to give {{ roundIndex + 2 }} cards)
+                </p>
+            </template>
             
             <h2 class="mt-7 text-lg text-center">Scoresheet</h2>
 
@@ -141,6 +156,16 @@ const players = usePlayers();
 const rounds = useRounds();
 const settings = useSettings();
 
+const isOfficialEnd = computed(() => {
+    switch (players.value.length) {
+        case 3: return roundIndex.value == 19;
+        case 4: return roundIndex.value == 14;
+        case 5: return roundIndex.value == 11;
+        case 6: return roundIndex.value == 9;
+        default: return false;
+    }
+});
+
 onBeforeMount(() => {
     if (rounds.value.length > 0) {
         roundIndex.value = rounds.value.length - 1;
@@ -182,6 +207,16 @@ const cancelRound = () => {
     roundIndex.value--;
     view.value = 'scores';
 };
+
+const newGame = () => {
+    if (settings.value.rotateStartingPlayer) {
+        players.value = [...players.value.slice(1), players.value[0]!]; // move first to last
+        localStorage.setItem('players', JSON.stringify(players.value));
+    }
+    localStorage.removeItem('rounds');
+    rounds.value = [];
+    roundIndex.value = -1;
+}
 
 const getPlayer = (prev = false) => {
     const offset = prev ? players.value.length - 1 : 0;
