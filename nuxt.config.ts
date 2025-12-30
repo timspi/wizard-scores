@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   css: ['./app/main.css'],
+  app: {
+    baseURL: '/wizard-scores/',
+  },
   vite: {
       plugins: [
           tailwindcss(),
