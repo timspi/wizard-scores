@@ -1,20 +1,31 @@
 <template>
   <div class="dark:bg-slate-900 dark:text-gray-100">
-    <Main></Main>
+    <NuxtPwaManifest />
+    <ClientOnly>
+      <Main></Main>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup>
-import { StatusBar } from '@capacitor/status-bar';
-StatusBar.setBackgroundColor({ color: '#1e293b' });
+const conf = useRuntimeConfig();
 
 useHead({
-  title: 'Wizard Scorekeeper',
+  title: 'Wizard Scores',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   charset: 'utf-8',
   meta: [
-    { name: 'description', content: 'Digital scoresheet to keep track of scores of the card game Wizard.' }
+    { name: 'description', content: 'Simple scoresheet for the card game Wizard' },
+    { name: 'theme-color', content: '#ffffff' },
   ],
+  link: [
+    { rel: 'icon', href: conf.app.baseURL + 'favicon.ico' },
+    { rel: 'apple-touch-icon', href: conf.app.baseURL + 'apple-touch-icon.png' },
+    { rel: 'mask-icon', href: conf.app.baseURL + 'favicon.svg' },
+  ],
+  htmlAttrs: {
+    lang: 'en'
+  },
   bodyAttrs: {
     class: 'dark bg-slate-900 text-gray-100 dark:bg-slate-900 dark:text-gray-100'
   }

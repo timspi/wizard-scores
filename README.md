@@ -42,26 +42,14 @@ npm run dev
 Build the application for production:
 
 ```bash
-npm run build
+npm run generate
 ```
 
-Locally preview production build:
 
-```bash
-npm run preview
+## Deployment
+
+On the hosting server, allow in the top-level site's robots.txt:
 ```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.
-
-
-### Android app
-
-Capacitor is used to provide an Android app.
-
-Sync the built code with the android app:
-
-```bash
-npx cap sync
+User-agent: *
+Allow: /wizard-scores/
 ```
-
-Checkout the [Capacitor documentation](https://capacitorjs.com/docs/android).
